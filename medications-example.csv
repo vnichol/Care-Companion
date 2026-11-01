@@ -1,0 +1,9 @@
+id,name,generic_name,strength,dose_amount,dose_unit,form,route,purpose,schedule_type,times,days_of_week,interval_days,start_date,end_date,with_food,prn_min_hours_between,prn_max_per_day,in_blister_pack,blister_slot,status,instructions,notes
+asa,Aspirin EC,acetylsalicylic acid,81 mg,1,tablet,tablet,oral,Prevents blood clots,daily,08:00,,,2026-01-01,,,,,yes,BK,active,Take 1 tablet once daily,
+calcium,Calcium carbonate,calcium carbonate,500 mg,1,tablet,tablet,oral,Bone support,daily,08:00;18:00,,,2026-01-01,,yes,,,yes,BK;SP,active,Take 1 tablet with breakfast and supper,
+acyclovir,Acyclovir,acyclovir,400 mg,1,tablet,tablet,oral,Prevents shingles,daily,08:00;20:00,,,2026-01-01,,,,,yes,BK;BD,active,Take 1 tablet twice daily,
+septra,Septra DS,sulfamethoxazole/trimethoprim,800/160 mg,1,tablet,tablet,oral,Prevents a lung infection,days_of_week,08:00,Mon;Wed;Fri,,2026-01-01,,,,,yes,BK,active,"Take 1 tablet Mon, Wed, Fri mornings",
+lenalidomide,Lenalidomide,lenalidomide,10 mg,1,capsule,capsule,oral,Cancer treatment,daily,20:00,,,2026-01-01,2026-01-21,,,,no,,active,Take 1 capsule daily for 21 days. Swallow whole.,Confirm cycle dates with the clinic
+dexamethasone,Dexamethasone,dexamethasone,4 mg,5,tablet,tablet,oral,Cancer treatment (steroid),weekly,08:00,Mon,,2026-01-01,,yes,,,no,,active,Take 20 mg (5 x 4 mg) Monday morning with food,
+ondansetron,Ondansetron,ondansetron,4 mg,1,tablet,tablet,oral,Nausea,prn,,,,2026-01-01,,,8,3,no,,active,1 tablet every 8 hours as needed,
+daratumumab,Daratumumab (at clinic),daratumumab,,,,injection,subcutaneous,Cancer treatment,clinic,,Mon,,2026-01-01,,,,,no,,active,Given at the cancer centre,Record only

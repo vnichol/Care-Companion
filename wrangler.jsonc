@@ -1,0 +1,13 @@
+{
+  "name": "care-companion",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-01",
+  "assets": { "directory": "./public", "binding": "ASSETS" },
+  // Checks every minute whether a reminder is due.
+  "triggers": { "crons": ["* * * * *"] },
+  // Cloudflare creates this database for you when you click "Deploy to Cloudflare".
+  "d1_databases": [
+    { "binding": "DB", "database_name": "care-db", "migrations_dir": "migrations" }
+  ],
+  "observability": { "enabled": true }
+}

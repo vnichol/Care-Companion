@@ -1,0 +1,33 @@
+{
+  "name": "care-companion",
+  "version": "1.0.0",
+  "description": "Medication reminders, symptom tracking and a doctor's report for people going through cancer treatment. Runs free on your own Cloudflare account.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "db:migrate": "wrangler d1 migrations apply DB --remote",
+    "deploy": "npm run db:migrate && wrangler deploy",
+    "dev": "wrangler d1 migrations apply DB --local && wrangler dev --test-scheduled",
+    "test": "node --test test/*.test.mjs"
+  },
+  "devDependencies": {
+    "http_ece": "1.2.1",
+    "wrangler": "4.151.0"
+  },
+  "cloudflare": {
+    "label": "Care Companion",
+    "products": [
+      "Workers",
+      "D1"
+    ],
+    "categories": [
+      "storage"
+    ],
+    "bindings": {
+      "DB": {
+        "description": "Holds medications, logs and appointments. Created for you; keep the suggested name."
+      }
+    }
+  }
+}

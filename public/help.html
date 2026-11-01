@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Care Companion Help</title>
+  <meta name="theme-color" content="#3f8f8a">
+  <link rel="icon" href="/icons/icon-192.png">
+  <style>
+    :root {
+      --bg: #f7f3ee; --card: #ffffff; --ink: #22302e; --muted: #6b7774; --line: #e7e0d7;
+      --accent: #3f8f8a; --accent-soft: #e2f1ef; --danger: #b5382b; --danger-soft: #fbe9e6;
+      color-scheme: light;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #121817; --card: #1b2422; --ink: #e8efed; --muted: #99a8a4; --line: #2b3734;
+        --accent: #5fb5ae; --accent-soft: #1d3634; --danger: #ef7d70; --danger-soft: #3a1f1b;
+        color-scheme: dark;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--ink);
+      font: 17px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      -webkit-text-size-adjust: 100%;
+    }
+    .wrap { max-width: 720px; margin: 0 auto; padding: calc(16px + env(safe-area-inset-top)) 16px 64px; }
+    .back { display: inline-block; margin-bottom: 8px; color: var(--accent); font-weight: 600; text-decoration: none; }
+    h1 { font-size: 30px; line-height: 1.2; margin: 4px 0 6px; }
+    .lede { color: var(--muted); margin: 0 0 20px; }
+    h2 { font-size: 21px; margin: 32px 0 10px; scroll-margin-top: 16px; }
+    h3 { font-size: 17px; margin: 18px 0 4px; }
+    p, ul, ol { margin: 0 0 10px; }
+    ul, ol { padding-left: 22px; }
+    li { margin-bottom: 4px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; margin: 10px 0; }
+    .toc { columns: 2; column-gap: 24px; padding-left: 18px; margin: 0; }
+    .toc li { break-inside: avoid; }
+    .toc a { color: var(--accent); text-decoration: none; }
+    .tip { background: var(--accent-soft); border: 0; }
+    .urgent { background: var(--danger-soft); border-color: var(--danger); }
+    .urgent strong:first-child { color: var(--danger); }
+    b.ui { font-weight: 650; }
+    .small { color: var(--muted); font-size: 15px; }
+    @media (max-width: 480px) { .toc { columns: 1; } }
+    @media print {
+      :root { --bg: #fff; --card: #fff; --ink: #000; --muted: #444; --line: #bbb; --accent: #1f6460; --accent-soft: #eef6f5; --danger: #a02a1e; --danger-soft: #fbeeec; }
+      body { font-size: 11pt; }
+      .back, .no-print { display: none; }
+      h2 { break-after: avoid; }
+      .card { break-inside: avoid; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <a class="back" href="/?tab=settings">‹ Back to Care</a>
+  <h1>How to use Care Companion</h1>
+  <p class="lede">Care keeps track of medicines, appointments and how the patient is feeling, and sends reminders to your phones. Everyone who opens it with the family code sees the same information.</p>
+
+  <div class="card">
+    <ol class="toc">
+      <li><a href="#start">Getting started</a></li>
+      <li><a href="#reminders">Reminders</a></li>
+      <li><a href="#today">The Today screen</a></li>
+      <li><a href="#doses">Checking off doses</a></li>
+      <li><a href="#log">Logging a medicine</a></li>
+      <li><a href="#pain">Pain</a></li>
+      <li><a href="#symptom">Symptoms (with a timer)</a></li>
+      <li><a href="#temp">Temperature and fever</a></li>
+      <li><a href="#bowels">Bowels</a></li>
+      <li><a href="#water">Water and exercise</a></li>
+      <li><a href="#checkin">Daily check-in</a></li>
+      <li><a href="#meds">Meds tab</a></li>
+      <li><a href="#import">Importing a CSV</a></li>
+      <li><a href="#visits">Visits and calendar</a></li>
+      <li><a href="#circle">Circle of care</a></li>
+      <li><a href="#notes">Notes</a></li>
+      <li><a href="#report">Report for the doctor</a></li>
+      <li><a href="#settings">Settings</a></li>
+      <li><a href="#urgent">When to call</a></li>
+      <li><a href="#faq">Questions</a></li>
+    </ol>
+  </div>
+
+  <div class="card urgent">
+    <strong>Care is a helper, not a doctor.</strong> Always follow the care team's instructions. For a fever, a warning sign, or anything that worries you, call the team. In an emergency, call your local emergency number (911 in North America).
+  </div>
+
+  <h2 id="start">Getting started</h2>
+  <ol>
+    <li>Open the Care web address in <b class="ui">Safari</b> on the iPhone. (The very first time, Care asks who it’s for and makes the family code. See the setup guide.)</li>
+    <li>Tap the <b class="ui">Share</b> button (the square with an arrow), then <b class="ui">Add to Home Screen</b>, then <b class="ui">Add</b>.</li>
+    <li>Open Care from the new Home Screen icon. Enter the <b class="ui">family code</b> and your first name, then tap <b class="ui">Open</b>.</li>
+  </ol>
+  <p>You only enter the code once on each phone. Your name is shown next to the things you log, so you can tell who checked off a dose.</p>
+  <p>The patient's phone and a caregiver's phone can both use Care at the same time. Changes on one phone show up on the other within about a minute, or right away when you reopen the app.</p>
+  <div class="card tip">Keep the family code private. Anyone with it can see and change the information in Care.</div>
+
+  <h2 id="reminders">Reminders</h2>
+  <p>On iPhone, reminders only work when Care is opened from the Home Screen icon.</p>
+  <ol>
+    <li>Go to <b class="ui">Settings</b> and tap <b class="ui">Turn on reminders</b>, then allow notifications.</li>
+    <li>Tap <b class="ui">Send a test</b> to check that a notification arrives.</li>
+    <li>Choose what this phone gets:
+      <ul>
+        <li><b class="ui">Medication times and refills</b>: a notification when a dose is due, and when supply is running low.</li>
+        <li><b class="ui">Appointments</b>: a reminder before each visit.</li>
+        <li><b class="ui">Caregiver alerts</b>: when a dose isn't checked off within 30 minutes, and right away when a fever, warning sign, or blood in the stool is logged. Turn this on for caregivers' phones.</li>
+        <li><b class="ui">Pain check-ins</b>: a reminder to rate pain at the times set in Settings.</li>
+      </ul>
+    </li>
+  </ol>
+  <p>Doses in the same blister pack slot (for example Breakfast) come as one notification.</p>
+
+  <h2 id="today">The Today screen</h2>
+  <p>Today shows large buttons (tiles) for the things you log most, followed by today's doses and upcoming appointments.</p>
+  <ul>
+    <li><b class="ui">Symptom</b> (wide, at the top): start a timer for a symptom.</li>
+    <li><b class="ui">Pain</b>, <b class="ui">Medicine</b>, <b class="ui">Temperature</b>, <b class="ui">Bowels</b>, <b class="ui">Water</b>, <b class="ui">Exercise</b>.</li>
+    <li><b class="ui">Daily check-in</b> (wide, at the bottom).</li>
+  </ul>
+  <p>Use the <b class="ui">‹</b> and <b class="ui">›</b> arrows at the top to look at other days. On a past day, use <b class="ui">+ Log a dose on this day</b> to fill in something you forgot.</p>
+  <p>A tile turns red when something needs attention, such as a recent fever or three days without a bowel movement.</p>
+
+  <h2 id="doses">Checking off doses</h2>
+  <p>Scheduled doses are listed in time order. Tap <b class="ui">Taken</b> when a dose is done, or <b class="ui">Skip</b> if it was skipped on purpose. The bar at the top shows how many of today's doses are done.</p>
+  <p>Blister packs show as one row per slot (Breakfast, Lunch, Supper, Bedtime), so one tap on <b class="ui">Taken</b> checks off the whole pocket. Tap the row to see the medicines in it. <b class="ui">Undo</b> reverses a check-off.</p>
+  <p><b class="ui">Got the time wrong?</b> Tap <b class="ui">Change</b> under a taken dose to fix the time it was taken, or the number of pills. On a blister pack, <b class="ui">Change</b> moves the whole pack to the new time. Use the <b class="ui">‹</b> arrow at the top of Today to fix a dose from an earlier day.</p>
+  <p>Tap the <b class="ui">ⓘ</b> next to a medicine's name for a plain-language explanation of what it's for and what to watch for.</p>
+
+  <h2 id="log">Logging a medicine</h2>
+  <p>Use the <b class="ui">Medicine</b> tile for as-needed doses (such as breakthrough hydromorphone) or an extra dose.</p>
+  <ol>
+    <li>Tap <b class="ui">Medicine</b> and pick the medicine from the list.</li>
+    <li>Set how many pills or how much was taken.</li>
+    <li>If it was taken earlier, for example during the night, change the time.</li>
+    <li>Tap <b class="ui">Save</b>.</li>
+  </ol>
+  <p>Care shows when the last dose was taken, and warns you if it's too soon or over the daily limit set for that medicine. These doses appear under <b class="ui">Other doses</b> on Today, where <b class="ui">Change</b> fixes the date, time or amount.</p>
+
+  <h2 id="pain">Pain</h2>
+  <p>Tap <b class="ui">Pain</b> and choose a number from 0 (no pain) to 10 (the worst pain). You can add a note, such as where it hurts or what helped, and change the time if it was earlier. Pain can be rated any time, including when waking up at night.</p>
+  <p>If pain check-in reminders are on, a notification asks for a rating at the set times. The reminder is skipped if pain was rated in the last hour.</p>
+
+  <h2 id="symptom">Symptoms (with a timer)</h2>
+  <p>Use this for things like a back spasm, nausea, dizziness or a headache.</p>
+  <ol>
+    <li>Tap the <b class="ui">Symptom</b> tile, pick what it is (or type something else), and choose <b class="ui">Minor</b> or <b class="ui">Major</b>.</li>
+    <li>Optional: where it is, a note, and when it started.</li>
+    <li>Choose how to save it:
+      <ul>
+        <li><b class="ui">Start timer</b> while it's happening. The tile shows a running clock; tap <b class="ui">Stop</b> when it ends.</li>
+        <li>Tap a length (1 min, 5 min, …) if it's already over.</li>
+        <li><b class="ui">Just log it (no time)</b> if you don't know how long it lasted.</li>
+      </ul>
+    </li>
+  </ol>
+
+  <h2 id="temp">Temperature and fever</h2>
+  <p>Tap <b class="ui">Temperature</b> and enter the reading in °C. If it's at or above the fever level (38.0 °C unless you changed it in Settings), Care shows a red <b class="ui">Call the care team now</b> screen with call buttons and alerts caregivers' phones.</p>
+  <div class="card urgent"><strong>A fever during myeloma treatment can be serious.</strong> Call the number the team gave you right away; don't wait to see if it goes down.</div>
+
+  <h2 id="bowels">Bowels</h2>
+  <p>Tap <b class="ui">Bowels</b> to record a bowel movement. Optionally pick what it was like on the 7-type scale (1 hard lumps, 4 smooth, 7 watery), the amount, and whether there was straining or pain. <b class="ui">Save</b> alone is enough.</p>
+  <ul>
+    <li>The tile shows today's count. After 3 days with none it turns red. Pain medicines often cause constipation, so tell the team.</li>
+    <li>Ticking <b class="ui">Blood seen</b> or <b class="ui">Black or tarry</b> opens the call screen and alerts caregivers.</li>
+  </ul>
+
+  <h2 id="water">Water and exercise</h2>
+  <p><b class="ui">Water</b>: tap a container (glass, Yeti…) to add a full one, or type an amount in mL for part of one (for example half a Yeti). Set up containers and a daily goal in Settings. The bar on the tile shows progress toward the goal.</p>
+  <p><b class="ui">Exercise</b>: add minutes of walking or other activity. Short walks count. The daily goal is set in Settings.</p>
+
+  <h2 id="checkin">Daily check-in</h2>
+  <p>Once a day, tap <b class="ui">Daily check-in</b> and answer a few quick questions: tiredness, numbness or tingling, nausea, shortness of breath, bowels, sleep, appetite, mood, and where it hurts. It takes under a minute, and doctors find the pattern over time useful.</p>
+  <p>At the bottom are warning signs to watch for. Ticking any of them shows the call screen and alerts caregivers. You can tap the tile again to update today's answers.</p>
+
+  <h2 id="meds">Meds tab</h2>
+  <p>The Meds tab lists every medicine, grouped as blister pack, other scheduled, as needed, given at the clinic, needs confirming, and on hold.</p>
+  <ul>
+    <li>Tap <b class="ui">Add a medication</b> or tap a medicine to change it.</li>
+    <li>Fill in the name, dose and unit (mg, mL, puffs…), and the times. For a blister pack, choose the slot for each time.</li>
+    <li>Choose the days: every day, certain weekdays, or every N days (for example lenalidomide every 2 days) from a start date. Add an end date if the course stops.</li>
+    <li><b class="ui">As needed</b> medicines have no reminders; you can set the minimum hours between doses and a daily maximum.</li>
+    <li>Enter the number of pills on hand to get a <b class="ui">refill</b> warning when supply is low.</li>
+    <li>Status: <b class="ui">Active</b>, <b class="ui">Confirm</b> (check with the pharmacist), or <b class="ui">On hold</b> (no reminders).</li>
+  </ul>
+
+  <h2 id="import">Importing a CSV</h2>
+  <p>If the pharmacy or clinic gives you a medication list as a spreadsheet, save it as a CSV file and use <b class="ui">Meds → Import from a CSV file</b>.</p>
+  <ol>
+    <li>Choose the file. Care shows a preview: which medicines are <b class="ui">new</b>, which <b class="ui">update</b> an existing one, and any problems.</li>
+    <li>Check the list, then tap <b class="ui">Import</b>. Nothing changes until you do.</li>
+  </ol>
+  <p>Medicines are matched by name, so importing a newer list updates what's there instead of adding duplicates. Blister slot codes BK, LU, SP and BD (or HS) mean Breakfast, Lunch, Supper and Bedtime.</p>
+
+  <h2 id="visits">Visits and calendar</h2>
+  <p>The Visits tab has two parts, switched at the top: <b class="ui">Appointments</b> and <b class="ui">Circle of care</b>.</p>
+  <ul>
+    <li>Add an appointment with the date, time, place, who it's with, and notes (questions to ask, what to bring).</li>
+    <li>The <b class="ui">month calendar</b> marks days with appointments. Tap a date to see that day's appointments below it; use the arrows to change months.</li>
+    <li>Below the calendar are <b class="ui">All upcoming</b> and <b class="ui">Recent</b> appointments. Tap one to change or delete it.</li>
+    <li>The next few appointments also appear on Today under <b class="ui">Coming up</b>.</li>
+  </ul>
+  <p><b class="ui">In your phone's Calendar:</b> go to Settings → <b class="ui">Subscribe in Calendar</b>. Care appointments then show in the iPhone Calendar app and update on their own.</p>
+
+  <h2 id="circle">Circle of care</h2>
+  <p>Visits → <b class="ui">Circle of care</b> holds everyone on the team: hematologist, oncology nurse, nurse navigator, pharmacist, family doctor, home care, and others.</p>
+  <ul>
+    <li>Tap <b class="ui">+ Add</b> and enter the name, role, clinic, phone, after-hours number, email and notes.</li>
+    <li>Each person has one-tap <b class="ui">Call</b>, <b class="ui">After hours</b> and <b class="ui">Email</b> buttons.</li>
+    <li>Tick <b class="ui">Call for fevers &amp; warning signs</b> for the clinic or on-call line. Their numbers appear on the red call screen.</li>
+  </ul>
+  <div class="card tip">Add the cancer centre's daytime and after-hours numbers first, and mark them for fevers and warning signs.</div>
+
+  <h2 id="notes">Notes</h2>
+  <p>Pick how the patient is feeling today and write anything worth remembering: side effects, questions for the doctor, what helped. Notes are kept by day and are included in the report.</p>
+
+  <h2 id="report">Report for the doctor</h2>
+  <p>The Report tab has two views:</p>
+  <ul>
+    <li><b class="ui">Charts &amp; log</b>: pick a day, week or month, and all medicines or one. Shows medicine use (one bar per medicine), pain, water, exercise, temperature and symptoms as charts, then a day-by-day list of everything logged.</li>
+    <li><b class="ui">Visit summary</b>: a one-page summary since the last appointment, with warning signs at the top, doses missed, as-needed use, pain, fevers, symptoms, bowels, and a <b class="ui">Questions to ask</b> list you can add to before the visit. Choose the period at the top.</li>
+  </ul>
+  <p>Tap <b class="ui">Share</b> to send it as text, or <b class="ui">Print or PDF</b> to print it or save a PDF to bring along.</p>
+
+  <h2 id="settings">Settings</h2>
+  <ul>
+    <li><b class="ui">Your name on this device</b>.</li>
+    <li><b class="ui">Reminders on this device</b> and the list of phones getting reminders.</li>
+    <li><b class="ui">Appointments in your Calendar</b>.</li>
+    <li><b class="ui">Care team</b>: link to the Circle of care, the fever level, and °C or °F.</li>
+    <li><b class="ui">Water</b> containers and goal, <b class="ui">Exercise</b> goal, <b class="ui">Pain check-in times</b>.</li>
+    <li><b class="ui">Time zone</b>: reminder times follow this. If you travel, Care offers to switch.</li>
+    <li><b class="ui">Sign out on this device</b>. This doesn't delete anything.</li>
+  </ul>
+
+  <h2 id="urgent">When to call the care team</h2>
+  <p>Settings → <b class="ui">When to call the care team</b> lists the signs to call about. In short, call right away for:</p>
+  <ul>
+    <li>A temperature at or above the fever level, or shaking chills.</li>
+    <li>New back pain with leg weakness or numbness.</li>
+    <li>A swollen or painful leg, chest pain, or sudden shortness of breath.</li>
+    <li>Unusual bleeding or bruising, or blood or black stool.</li>
+    <li>Confusion or extreme drowsiness.</li>
+  </ul>
+  <p class="small">Use the list the team gave you if it's different.</p>
+
+  <h2 id="faq">Questions</h2>
+  <h3>Do I need the internet?</h3>
+  <p>Care opens without a connection and shows the last information it had, but logging and reminders need the internet.</p>
+  <h3>I'm not getting reminders.</h3>
+  <p>Make sure Care was opened from the Home Screen icon, reminders are on in Settings, and notifications for Care are allowed in the iPhone's Settings → Notifications. Use <b class="ui">Send a test</b>. If it still doesn't work, tap <b class="ui">Turn off</b>, then turn reminders on again.</p>
+  <h3>I made a mistake.</h3>
+  <p>Most entries have a <b class="ui">Remove</b> or <b class="ui">✕</b> button. Remove it and log it again.</p>
+  <h3>Something looks out of date.</h3>
+  <p>Close Care completely and reopen it. It checks for new information and app updates each time it opens.</p>
+  <h3>Is the information private?</h3>
+  <p>It's stored in a private database that only opens with the family code. The calendar link shows appointments only and can't change anything.</p>
+
+  <p class="no-print" style="margin-top:32px"><a class="back" href="/?tab=settings">‹ Back to Care</a></p>
+</main>
+</body>
+</html>
