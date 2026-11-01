@@ -88,6 +88,8 @@ function medOnDate(med, d) {
 const PACK_NAMES = { BK: 'Breakfast', LU: 'Lunch', SP: 'Supper', BD: 'Bedtime', HS: 'Bedtime' };
 const packName = (code) => PACK_NAMES[code] || code;
 const slotOf = (med, t) => (med.slots || [])[med.times.indexOf(t)] || '';
+const inPack = (m) => m.active && !m.as_needed && (m.slots || []).some(Boolean);
+const byName = (a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
 
 function scheduleText(med) {
   if (med.kind === 'clinic') return `Given at the clinic${med.days.length ? ` · ${med.days.map((d) => DAY_NAMES[d]).join(', ')}` : ''}`;
@@ -530,23 +532,35 @@ const UNIT_NAMES = {
 const unitWord = (n, med) => (UNIT_NAMES[med?.unit] || UNIT_NAMES.pill)[n === 1 ? 0 : 1];
 const amountText = (n, med) => `${fmtCount(n)} ${unitWord(n, med)}`;
 
-// When a medicine was last taken, as "YYYY-MM-DDTHH:MM" ('' if never), for sorting.
-const lastTaken = (m) => S.state.logs.filter((l) => l.med_id === m.id && l.status === 'taken')
-  .map((l) => `${l.date}T${doseTime(l)}`).sort().at(-1) || '';
-
 function openLogForm(day, medId) {
   const now = localNow();
   const meds = S.state.meds.filter((m) => m.active);
-  // As-needed medicines first, most recently used at the top; then the scheduled ones A–Z.
-  const clinic = meds.filter((m) => m.kind === 'clinic').sort((a, b) => a.name.localeCompare(b.name));
-  const prn = meds.filter((m) => m.as_needed && m.kind !== 'clinic').sort((a, b) => lastTaken(b).localeCompare(lastTaken(a)) || a.name.localeCompare(b.name));
-  const scheduled = meds.filter((m) => !m.as_needed).sort((a, b) => a.name.localeCompare(b.name));
-  const option = (m) => h('option', { value: String(m.id), selected: m.id === medId }, medLabel(m));
-  const medSel = h('select', { name: 'med', required: true, 'aria-label': 'Medicine' },
-    medId ? null : h('option', { value: '', disabled: true, selected: true }, 'Choose a medicine…'),
-    prn.length ? h('optgroup', { label: 'As needed' }, prn.map(option)) : null,
-    scheduled.length ? h('optgroup', { label: 'On a schedule' }, scheduled.map(option)) : null,
-    clinic.length ? h('optgroup', { label: 'Given at the clinic' }, clinic.map(option)) : null);
+  // A coloured list in groups, A–Z within each. Blister-pack medicines are tucked away at the
+  // bottom: they're counted when the pack is checked off, so logging them here would count them twice.
+  const groups = [
+    ['As needed', 'prn', meds.filter((m) => m.as_needed && m.kind !== 'clinic')],
+    ['On a schedule', 'sched', meds.filter((m) => !m.as_needed && m.kind !== 'clinic' && (!inPack(m) || m.id === medId))],
+    ['Given at the clinic', 'clinic', meds.filter((m) => m.kind === 'clinic')],
+  ].map(([title, cls, list]) => [title, cls, list.sort(byName)]).filter(([, , list]) => list.length);
+  const packMeds = meds.filter((m) => inPack(m) && m.kind !== 'clinic' && m.id !== medId).sort(byName);
+  const medSel = h('input', { type: 'hidden', name: 'med', value: medId ? String(medId) : '' });
+  const chosen = h('button', { type: 'button', class: 'med-chosen', hidden: !medId, onclick: () => showList(true) });
+  const pickBtn = (m, cls) => h('button', { type: 'button', class: `med-pick ${cls}`, onclick: () => choose(m) }, medLabel(m));
+  const medList = h('div', { class: 'med-picker', hidden: !!medId },
+    groups.map(([title, cls, list]) => h('div', { class: `med-group ${cls}` },
+      h('div', { class: 'med-group-title' }, title), list.map((m) => pickBtn(m, cls)))),
+    packMeds.length ? h('details', { class: 'med-group pack' },
+      h('summary', { class: 'med-group-title' }, `In a blister pack (${packMeds.length})`),
+      h('p', { class: 'hint' }, 'These are counted when the pack is checked off on Today. Only log one here for an extra pill outside the pack.'),
+      packMeds.map((m) => pickBtn(m, 'pack'))) : null);
+  const showList = (open) => { medList.hidden = !open; chosen.hidden = open; };
+  const choose = (m) => {
+    medSel.value = String(m.id);
+    chosen.replaceChildren(h('span', {}, medLabel(m)), h('span', { class: 'link' }, 'Change'));
+    showList(false);
+    medSel.dispatchEvent(new Event('change'));
+  };
+  if (medId) { const m = meds.find((x) => x.id === medId); if (m) choose(m); }
   const dateIn = h('input', { name: 'date', type: 'date', required: true, max: now.date, value: day });
   const timeIn = h('input', { name: 'time', type: 'time', required: true, value: day === now.date ? now.time : '' });
   const slotSel = h('select', { name: 'slot' });
@@ -630,7 +644,7 @@ function openLogForm(day, medId) {
     } }, 'Dose logged');
     if (ok) close();
   } },
-  field('Medication', medSel),
+  h('div', { class: 'field' }, h('span', { class: 'label' }, 'Medication'), medSel, chosen, medList),
   h('div', { class: 'grid2' }, field('Date', dateIn), field('Time taken', timeIn)),
   pillsField,
   limitNote,
@@ -843,6 +857,11 @@ function todayTiles(now, meds) {
   const xGoal = S.state.exerciseGoal || 0;
 
   return h('div', { class: 'tiles' },
+    // Today's symptom check-in sits at the top and stands out until it's done.
+    checkedIn ? tile('Today’s symptoms', 'Done ✓', 'Tap to update', () => openCheckinSheet(), 'wide checkin-tile done')
+      : h('button', { class: 'tile wide checkin-tile todo', onclick: () => openCheckinSheet() },
+        h('span', { class: 'checkin-cta' }, 'Log today’s symptoms'),
+        h('span', { class: 'tile-sub' }, 'Tiredness, numbness, sleep, mood… takes about a minute')),
     episodeTile(),
     tile('Pain', pain ? `${pain.score}/10` : 'Rate', pain ? whenLabel(pain.date, pain.time, now) : 'Tap to rate 0–10', () => openPainSheet()),
     meds.length ? tile('Medicine', 'Log', extraMed ? `Last: ${extraMed.name} · ${whenLabel(extra.date, doseTime(extra), now)}` : 'As-needed or extra dose',
@@ -860,8 +879,7 @@ function todayTiles(now, meds) {
     })(),
     tile('Water', fmtMl(water), wGoal ? `of ${fmtMl(wGoal)}` : 'today', () => openWaterSheet(), '',
       wGoal ? h('span', { class: 'tile-bar' }, h('span', { style: `width:${Math.min(100, (water / wGoal) * 100)}%` })) : null),
-    tile('Exercise', fmtMin(ex), xGoal ? `of ${fmtMin(xGoal)}${ex >= xGoal ? ' 🎉' : ''}` : 'today', () => openExerciseSheet()),
-    tile('Daily check-in', checkedIn ? 'Done ✓' : 'Not yet', checkedIn ? 'Tap to update' : 'Tiredness, numbness, sleep, mood…', () => openCheckinSheet(), `wide checkin-tile${checkedIn ? ' done' : ''}`));
+    tile('Exercise', fmtMin(ex), xGoal ? `of ${fmtMin(xGoal)}${ex >= xGoal ? ' 🎉' : ''}` : 'today', () => openExerciseSheet()));
 }
 
 // ---------- symptom episodes (timed) ----------
@@ -1136,9 +1154,9 @@ const SCALE = ['None', 'Mild', 'Moderate', 'Severe', 'Very bad'];
 const SYMPTOMS = [['fatigue', 'Tiredness'], ['numbness', 'Numbness or tingling (hands/feet)'], ['nausea', 'Nausea'], ['breath', 'Short of breath']];
 const CHOICES = [
   ['bowels', 'Bowels', [['normal', 'Normal'], ['constipated', 'Constipated'], ['diarrhea', 'Diarrhea'], ['none', 'No BM']]],
-  ['sleep', 'Sleep', [['good', 'Good'], ['ok', 'OK'], ['poor', 'Poor']]],
-  ['appetite', 'Appetite', [['good', 'Good'], ['ok', 'OK'], ['poor', 'Poor']]],
-  ['mood', 'Mood', [['good', 'Good'], ['ok', 'OK'], ['low', 'Low']]],
+  ['sleep', 'Sleep', [['great', 'Very good'], ['good', 'Good'], ['ok', 'OK'], ['poor', 'Poor'], ['very_poor', 'Very poor']]],
+  ['appetite', 'Appetite', [['great', 'Very good'], ['good', 'Good'], ['ok', 'OK'], ['poor', 'Poor'], ['very_poor', 'Very poor']]],
+  ['mood', 'Mood', [['great', 'Very good'], ['good', 'Good'], ['ok', 'OK'], ['low', 'Low'], ['very_low', 'Very low']]],
 ];
 const AREAS = ['Lower back', 'Upper back', 'Neck', 'Ribs or chest', 'Hips', 'Legs', 'Arms', 'Shoulders', 'Head', 'Stomach'];
 const WARNING_FLAGS = [
@@ -1187,7 +1205,7 @@ function openCheckinSheet() {
   } },
   SYMPTOMS.map(([key, label]) => h('div', { class: 'checkin-q' },
     h('span', { class: 'label' }, label), pickRow(key, SCALE.map((w, i) => [i, w]), false, 'scale'))),
-  CHOICES.map(([key, label, opts]) => h('div', { class: 'checkin-q' }, h('span', { class: 'label' }, label), pickRow(key, opts))),
+  CHOICES.map(([key, label, opts]) => h('div', { class: 'checkin-q' }, h('span', { class: 'label' }, label), pickRow(key, opts, false, opts.length === 5 ? 'scale' : ''))),
   h('div', { class: 'checkin-q' }, h('span', { class: 'label' }, 'Where does it hurt?'), pickRow('areas', AREAS.map((a) => [a, a]), true)),
   h('fieldset', { class: 'fieldset warn-box' }, h('legend', { class: 'label' }, 'Any of these? (call the care team)'),
     WARNING_FLAGS.map((f) => h('label', { class: 'check' },
@@ -1202,7 +1220,7 @@ function checkinSummary(c) {
   const parts = [];
   const sx = SYMPTOMS.filter(([k]) => c.symptoms[k] > 0).map(([k, label]) => `${label.split(' (')[0]} ${SCALE[c.symptoms[k]].toLowerCase()}`);
   if (sx.length) parts.push(sx.join(', '));
-  const ch = CHOICES.filter(([k]) => c.symptoms[k] && !['normal', 'good'].includes(c.symptoms[k]))
+  const ch = CHOICES.filter(([k]) => c.symptoms[k] && !['normal', 'good', 'great'].includes(c.symptoms[k]))
     .map(([k, label]) => (k === 'bowels' ? choiceLabel(k, c.symptoms[k]) : `${label} ${choiceLabel(k, c.symptoms[k]).toLowerCase()}`));
   if (ch.length) parts.push(ch.join(', '));
   if (c.areas.length) parts.push(`Hurts: ${c.areas.join(', ')}`);
@@ -1226,15 +1244,14 @@ function viewMeds() {
       m.pills_left != null ? h('div', { class: `row-sub${needsRefill(m) ? ' late' : ''}` }, `${amountText(m.pills_left, m)} left${needsRefill(m) ? ' · refill soon' : ''}`) : null),
     h('span', { class: 'chev', 'aria-hidden': 'true' }, '›'));
 
-  // Long lists read better in groups: each blister pack, then the rest.
-  const inPack = (m) => m.active && !m.as_needed && (m.slots || []).some(Boolean);
+  // Long lists read better in groups: each blister pack, then the rest, A–Z within each.
   const groups = [
     ...['BK', 'LU', 'SP', 'BD'].map((code) => [`${packName(code)} blister pack`, meds.filter((m) => inPack(m) && m.slots.includes(code))]),
     ['Other scheduled', meds.filter((m) => m.active && !m.as_needed && !inPack(m))],
     ['As needed', meds.filter((m) => m.active && m.as_needed && m.kind !== 'clinic')],
     ['Given at the clinic', meds.filter((m) => m.active && m.kind === 'clinic')],
     ['On hold', meds.filter((m) => !m.active)],
-  ].filter(([, list]) => list.length);
+  ].filter(([, list]) => list.length).map(([title, list]) => [title, list.sort(byName)]);
 
   return [
     header('Medications', null, h('button', { class: 'btn primary small', onclick: () => openMedForm() }, '+ Add')),
@@ -2851,6 +2868,18 @@ function viewSettings() {
           e.target.textContent = hide ? 'Show' : 'Hide';
         } }, 'Show')), 'To add another phone: open Care on it and type this code.');
     })()));
+
+  // Day or night colours, just for this device. "Auto" follows the phone's own setting.
+  const theme = store.get('theme') || 'auto';
+  const themeBtns = [['auto', 'Auto'], ['light', '☀️ Day'], ['dark', '🌙 Night']].map(([v, label]) => h('button', {
+    type: 'button', 'aria-pressed': String(v === theme), onclick: () => {
+      store.set('theme', v === 'auto' ? null : v);
+      v === 'auto' ? delete document.documentElement.dataset.theme : (document.documentElement.dataset.theme = v);
+      themeBtns.forEach((b, i) => b.setAttribute('aria-pressed', String(['auto', 'light', 'dark'][i] === v)));
+    } }, label));
+  out.push(section('Screen', h('div', { class: 'card form' },
+    h('div', { class: 'segmented three', role: 'group', 'aria-label': 'Day or night colours' }, themeBtns),
+    h('p', { class: 'hint' }, 'Night is darker and easier on the eyes. Auto follows the phone’s own setting.'))));
 
   let reminders;
   if (isIOS && !isStandalone) {

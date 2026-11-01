@@ -1,5 +1,5 @@
 // Service worker: shows push notifications and keeps the app shell available offline.
-const CACHE = 'care-v26';
+const CACHE = 'care-v27';
 const SHELL = ['/', '/app.js', '/styles.css', '/medinfo.js', '/help', '/manifest.webmanifest', '/icons/icon-192.png', '/icons/icon-180.png'];
 
 self.addEventListener('install', (event) => {

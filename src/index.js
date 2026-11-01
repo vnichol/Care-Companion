@@ -419,9 +419,9 @@ async function route(request, env, url, ctx) {
 // Check-in answers that aren't 0–4 scales, and the warning signs that need an urgent call.
 const CHECKIN_CHOICES = {
   bowels: ['normal', 'constipated', 'diarrhea', 'none'],
-  sleep: ['good', 'ok', 'poor'],
-  appetite: ['good', 'ok', 'poor'],
-  mood: ['good', 'ok', 'low'],
+  sleep: ['great', 'good', 'ok', 'poor', 'very_poor'],
+  appetite: ['great', 'good', 'ok', 'poor', 'very_poor'],
+  mood: ['great', 'good', 'ok', 'low', 'very_low'],
 };
 const WARNING_FLAGS = [
   'Back pain with leg weakness or numbness',

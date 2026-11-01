@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Care Companion Help</title>
   <meta name="theme-color" content="#3f8f8a">
+  <script>try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch {}</script>
   <link rel="icon" href="/icons/icon-192.png">
   <style>
     :root {
@@ -13,11 +14,16 @@
       color-scheme: light;
     }
     @media (prefers-color-scheme: dark) {
-      :root {
+      :root:not([data-theme="light"]) {
         --bg: #121817; --card: #1b2422; --ink: #e8efed; --muted: #99a8a4; --line: #2b3734;
         --accent: #5fb5ae; --accent-soft: #1d3634; --danger: #ef7d70; --danger-soft: #3a1f1b;
         color-scheme: dark;
       }
+    }
+    :root[data-theme="dark"] {
+      --bg: #121817; --card: #1b2422; --ink: #e8efed; --muted: #99a8a4; --line: #2b3734;
+      --accent: #5fb5ae; --accent-soft: #1d3634; --danger: #ef7d70; --danger-soft: #3a1f1b;
+      color-scheme: dark;
     }
     * { box-sizing: border-box; }
     body {
@@ -118,9 +124,9 @@
   <h2 id="today">The Today screen</h2>
   <p>Today shows large buttons (tiles) for the things you log most, followed by today's doses and upcoming appointments.</p>
   <ul>
-    <li><b class="ui">Symptom</b> (wide, at the top): start a timer for a symptom.</li>
+    <li><b class="ui">Log today's symptoms</b> (at the very top, in colour until it's done): the daily check-in.</li>
+    <li><b class="ui">Symptom</b> (wide): start a timer for a symptom.</li>
     <li><b class="ui">Pain</b>, <b class="ui">Medicine</b>, <b class="ui">Temperature</b>, <b class="ui">Bowels</b>, <b class="ui">Water</b>, <b class="ui">Exercise</b>.</li>
-    <li><b class="ui">Daily check-in</b> (wide, at the bottom).</li>
   </ul>
   <p>Use the <b class="ui">‹</b> and <b class="ui">›</b> arrows at the top to look at other days. On a past day, use <b class="ui">+ Log a dose on this day</b> to fill in something you forgot.</p>
   <p>A tile turns red when something needs attention, such as a recent fever or three days without a bowel movement.</p>
@@ -134,12 +140,13 @@
   <h2 id="log">Logging a medicine</h2>
   <p>Use the <b class="ui">Medicine</b> tile for as-needed doses (such as breakthrough hydromorphone) or an extra dose.</p>
   <ol>
-    <li>Tap <b class="ui">Medicine</b> and pick the medicine from the list.</li>
+    <li>Tap <b class="ui">Medicine</b> and pick the medicine from the list. It's in coloured groups (as needed, on a schedule, given at the clinic), A to Z within each.</li>
     <li>Set how many pills or how much was taken.</li>
     <li>If it was taken earlier, for example during the night, change the time.</li>
     <li>Tap <b class="ui">Save</b>.</li>
   </ol>
   <p>Care shows when the last dose was taken, and warns you if it's too soon or over the daily limit set for that medicine. These doses appear under <b class="ui">Other doses</b> on Today, where <b class="ui">Change</b> fixes the date, time or amount.</p>
+  <p>Blister-pack medicines are folded away at the bottom of the list, because checking off the pack on Today already counts them. Only log one here for an extra pill outside the pack.</p>
 
   <h2 id="pain">Pain</h2>
   <p>Tap <b class="ui">Pain</b> and choose a number from 0 (no pain) to 10 (the worst pain). You can add a note, such as where it hurts or what helped, and change the time if it was earlier. Pain can be rated any time, including when waking up at night.</p>
@@ -175,11 +182,11 @@
   <p><b class="ui">Exercise</b>: add minutes of walking or other activity. Short walks count. The daily goal is set in Settings.</p>
 
   <h2 id="checkin">Daily check-in</h2>
-  <p>Once a day, tap <b class="ui">Daily check-in</b> and answer a few quick questions: tiredness, numbness or tingling, nausea, shortness of breath, bowels, sleep, appetite, mood, and where it hurts. It takes under a minute, and doctors find the pattern over time useful.</p>
+  <p>Once a day, tap <b class="ui">Log today's symptoms</b> at the top of Today and answer a few quick questions: tiredness, numbness or tingling, nausea, shortness of breath, bowels, sleep, appetite, mood, and where it hurts. Symptoms go from None to Very bad; sleep, appetite and mood go from Very good to Very poor. It takes under a minute, and doctors find the pattern over time useful.</p>
   <p>At the bottom are warning signs to watch for. Ticking any of them shows the call screen and alerts caregivers. You can tap the tile again to update today's answers.</p>
 
   <h2 id="meds">Meds tab</h2>
-  <p>The Meds tab lists every medicine, grouped as blister pack, other scheduled, as needed, given at the clinic, needs confirming, and on hold.</p>
+  <p>The Meds tab lists every medicine, grouped as blister pack, other scheduled, as needed, given at the clinic, and on hold, A to Z within each group.</p>
   <ul>
     <li>Tap <b class="ui">Add a medication</b> or tap a medicine to change it.</li>
     <li>Fill in the name, dose and unit (mg, mL, puffs…), and the times. For a blister pack, choose the slot for each time.</li>
@@ -230,6 +237,7 @@
   <h2 id="settings">Settings</h2>
   <ul>
     <li><b class="ui">Your name on this device</b>.</li>
+    <li><b class="ui">Screen</b>: <b class="ui">Day</b> (light), <b class="ui">Night</b> (dark), or <b class="ui">Auto</b> to follow the phone. Each phone chooses its own.</li>
     <li><b class="ui">Reminders on this device</b> and the list of phones getting reminders.</li>
     <li><b class="ui">Appointments in your Calendar</b>.</li>
     <li><b class="ui">Care team</b>: link to the Circle of care, the fever level, and °C or °F.</li>

@@ -18,7 +18,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #121817;
     --card: #1b2422;
     --ink: #e8efed;
@@ -35,6 +35,23 @@
     --shadow: none;
     color-scheme: dark;
   }
+}
+:root[data-theme="dark"] {
+  --bg: #121817;
+  --card: #1b2422;
+  --ink: #e8efed;
+  --muted: #99a8a4;
+  --line: #2b3734;
+  --accent: #5fb5ae;
+  --accent-ink: #0d1f1d;
+  --accent-soft: #1d3634;
+  --ok: #6fcf97;
+  --ok-soft: #183327;
+  --warn: #f0b85a;
+  --warn-soft: #382c16;
+  --danger: #ef7d70;
+  --shadow: none;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -311,11 +328,16 @@ select {
   --series-other: #8b9593;
 }
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70; --series-4: #c98500;
     --series-5: #d55181; --series-6: #008300; --series-7: #9085e9; --series-8: #e66767;
     --series-other: #6d7a77;
   }
+}
+:root[data-theme="dark"] {
+  --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70; --series-4: #c98500;
+  --series-5: #d55181; --series-6: #008300; --series-7: #9085e9; --series-8: #e66767;
+  --series-other: #6d7a77;
 }
 .chart { display: flex; flex-direction: column; gap: 10px; padding: 14px 12px; }
 .chart-area { position: relative; }
@@ -350,7 +372,7 @@ select {
 @page { margin: 0.5in; }
 
 @media print {
-  :root { --bg: #fff; --card: #fff; --ink: #000; --muted: #444; --line: #ccc; --ok: #1b6b3f; --warn: #8a5300; --shadow: none; }
+  :root, :root[data-theme], :root:not([data-theme="light"]) { --bg: #fff; --card: #fff; --ink: #000; --muted: #444; --line: #ccc; --ok: #1b6b3f; --warn: #8a5300; --shadow: none; }
   html, body { background: #fff; }
   body { font-size: 10.5pt; line-height: 1.35; }
   .tabbar, .no-print, #toast, .banner, .page-head, .chart-tip, .hint { display: none !important; }
@@ -454,7 +476,8 @@ select {
 
 /* water */
 :root { --water: #2a78d6; }
-@media (prefers-color-scheme: dark) { :root { --water: #3987e5; } }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --water: #3987e5; } }
+:root[data-theme="dark"] { --water: #3987e5; }
 .water-card { display: flex; flex-direction: column; gap: 10px; }
 .water-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
 .water-total { font-size: 15px; color: var(--muted); font-variant-numeric: tabular-nums; }
@@ -472,7 +495,8 @@ select {
 
 /* exercise */
 :root { --exercise: #1baf7a; }
-@media (prefers-color-scheme: dark) { :root { --exercise: #199e70; } }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --exercise: #199e70; } }
+:root[data-theme="dark"] { --exercise: #199e70; }
 .chart-svg .exercise-bar { fill: var(--exercise); }
 .chips input.min-other { width: 92px; min-height: 38px; padding: 6px 10px; border-radius: 99px; }
 
@@ -514,7 +538,8 @@ select {
 .chart-svg .temp-dot { fill: var(--ink); stroke: var(--card); stroke-width: 2; }
 .chart-svg .temp-dot.fever { fill: var(--danger); }
 :root { --sx-0: #ece6de; --sx-1: #f9d3bf; --sx-2: #f1a27b; --sx-3: #e0662f; --sx-4: #a8441a; }
-@media (prefers-color-scheme: dark) { :root { --sx-0: #2b3734; --sx-1: #5a3424; --sx-2: #8e4a2a; --sx-3: #c85d2a; --sx-4: #ef8a55; } }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sx-0: #2b3734; --sx-1: #5a3424; --sx-2: #8e4a2a; --sx-3: #c85d2a; --sx-4: #ef8a55; } }
+:root[data-theme="dark"] { --sx-0: #2b3734; --sx-1: #5a3424; --sx-2: #8e4a2a; --sx-3: #c85d2a; --sx-4: #ef8a55; }
 .sx-grid { display: grid; gap: 2px; align-items: center; font-size: 12px; }
 .sx-label { font-weight: 600; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 4px; }
 .sx-cell { display: inline-flex; align-items: center; justify-content: center; height: 20px; border-radius: 4px; font-size: 10px; font-weight: 700; color: var(--ink); }
@@ -609,3 +634,36 @@ select {
 .checkin-tile { min-height: 0; }
 .link-row { display: flex; gap: 14px; }
 .family-code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 17px; letter-spacing: .04em; align-self: center; flex: 1; }
+
+/* Today's symptom check-in: at the top, and hard to miss until it's done */
+.checkin-tile.todo { background: var(--accent); border-color: var(--accent); gap: 4px; padding: 16px; }
+.checkin-tile.todo:active { background: color-mix(in srgb, var(--accent) 85%, var(--ink)); }
+.checkin-cta { font-size: 21px; font-weight: 800; color: var(--accent-ink); }
+.checkin-tile.todo .tile-sub { color: var(--accent-ink); opacity: .9; }
+
+/* Log a dose: medicine picker, one colour per group */
+.med-group.prn { --grp: var(--series-1); }
+.med-group.sched { --grp: var(--series-3); }
+.med-group.clinic { --grp: var(--series-7); }
+.med-group.pack { --grp: var(--series-4); }
+.med-picker { display: flex; flex-direction: column; gap: 10px; max-height: 46vh; overflow-y: auto; padding: 2px; }
+.med-group { display: flex; flex-direction: column; gap: 4px; border-left: 5px solid var(--grp); padding-left: 8px; }
+.med-group-title {
+  position: sticky; top: 0; z-index: 1; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em;
+  color: var(--ink); background: color-mix(in srgb, var(--grp) 22%, var(--card)); border-radius: 8px; padding: 6px 10px;
+}
+details.med-group > summary { cursor: pointer; list-style-position: inside; }
+.med-pick {
+  text-align: left; font-size: 16px; padding: 10px 12px; min-height: 44px; border-radius: 10px; color: var(--ink);
+  border: 1px solid var(--line); background: color-mix(in srgb, var(--grp) 7%, var(--card));
+}
+.med-pick:active { background: color-mix(in srgb, var(--grp) 25%, var(--card)); }
+.med-chosen {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px; text-align: left; font-size: 17px; font-weight: 700;
+  padding: 12px; min-height: 48px; border-radius: 12px; border: 1px solid var(--accent); background: var(--accent-soft); color: var(--ink);
+}
+.med-chosen .link { font-weight: 600; font-size: 15px; }
+
+/* Day / night choice */
+.segmented.three { grid-template-columns: repeat(3, 1fr); }
+.segmented.three button { font-size: 15px; padding: 10px 0; }
